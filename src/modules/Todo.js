@@ -17,7 +17,9 @@ export default class Todo {
   }
 
   get info() {
-    return `${this.priority} - ${this.title} (Due: ${this.dueDate}): ${this.description} // ${this.isDone}`;
+    return `${this.priority} - ${this.title} (Due: ${this.dueDate}): ${
+      this.description
+    } // ${this.isDone ? "Done" : "In Progress"}`;
   }
 
   checkDone() {
