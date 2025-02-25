@@ -15,7 +15,8 @@ export default class Project {
         `Description of todo #${i + 1}`,
         new Date(new Date() - Math.random() * 1e10),
         "high",
-        false
+        false,
+        "home"
       );
       this.todos.push(td);
     }

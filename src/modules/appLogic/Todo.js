@@ -7,19 +7,21 @@ export default class Todo {
     description = "",
     dueDate = new Date(),
     priority = "",
-    isDone = false
+    isDone = false,
+    projectName = ""
   ) {
     this.title = title;
     this.description = description;
     this.dueDate = format(dueDate, "dd/MM/yyyy");
     this.priority = priority;
     this.isDone = isDone;
+    this.projectName = projectName;
   }
 
   get info() {
-    return `${this.priority} - ${this.title} (Due: ${this.dueDate}): ${
-      this.description
-    } // ${this.isDone ? "Done" : "In Progress"}`;
+    return `${this.priority} - ${this.projectName} - ${this.title} (Due: ${
+      this.dueDate
+    }): ${this.description} // ${this.isDone ? "Done" : "In Progress"}`;
   }
 
   checkDone() {
