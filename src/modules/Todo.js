@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 // Todo's module
 export default class Todo {
   // Constructor
@@ -10,7 +11,7 @@ export default class Todo {
   ) {
     this.title = title;
     this.description = description;
-    this.dueDate = dueDate;
+    this.dueDate = format(dueDate, "dd/MM/yyyy");
     this.priority = priority;
     this.isDone = isDone;
   }
