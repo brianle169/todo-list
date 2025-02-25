@@ -16,7 +16,7 @@ export default class Project {
         new Date(new Date() - Math.random() * 1e10),
         "high",
         false,
-        "home"
+        this.name
       );
       this.todos.push(td);
     }

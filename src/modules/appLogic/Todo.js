@@ -8,7 +8,7 @@ export default class Todo {
     dueDate = new Date(),
     priority = "",
     isDone = false,
-    projectName = ""
+    projectName = "home"
   ) {
     this.title = title;
     this.description = description;
@@ -16,6 +16,9 @@ export default class Todo {
     this.priority = priority;
     this.isDone = isDone;
     this.projectName = projectName;
+    this.code = `${projectName.toLowerCase()}-${title
+      .toLowerCase()
+      .replaceAll(" ", "_")}`;
   }
 
   get info() {

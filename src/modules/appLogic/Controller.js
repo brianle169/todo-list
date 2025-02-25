@@ -1,10 +1,8 @@
 import Todo from "./Todo.js";
 import Project from "./Project.js";
-// Controller module: This factory function will return the functionalities of a Controller, which will control the state of a todo list app.
+// Controller module: This factory function will return the functionalities of a Controller, which will help control the state of a todo list app.
 // It will create projects, todos, update projects & todos, and delete them.
-export default function Controller() {
-  const homeTodos = [];
-
+export const Controller = (function () {
   function addProject(name, description) {
     return new Project(name, description, []);
   }
@@ -19,17 +17,44 @@ export default function Controller() {
     return new Todo(title, description, dueDate, priority, false, projectName);
   }
 
-  function deleteTodo() {}
+  function deleteTodo(project, projectName = "home", title) {
+    let target = `${projectName.toLowerCase()}-${title
+      .toLowerCase()
+      .replaceAll(" ", "_")}`;
+    for (let i = 0; i < project.length; i++) {
+      if (project[i].code === target) {
+        project.splice(i, 1);
+        break;
+      }
+    }
+  }
 
-  function deleteProject() {}
+  function deleteProject(projectList, projectName) {
+    for (let i = 0; i < projectList.length; i++) {
+      if (projectList[i].name === projectName) {
+        projectList.splice(i, 1);
+        break;
+      }
+    }
+  }
 
-  function displayAllTodos() {}
+  function displayAllTodos(projectList) {
+    for (const project of projectList) {
+      for (const todo of project.todos) {
+        todo.logInfo();
+      }
+    }
+  }
 
-  function displayAllProject() {}
+  function displayAllProject(projectList) {
+    for (const project of projectList) {
+      console.log(project);
+    }
+  }
 
-  function updateProjectInfo() {}
+  // function updateProjectInfo() {}
 
-  function updateTodo() {}
+  // function updateTodo() {}
 
   return {
     addTodo,
@@ -38,7 +63,7 @@ export default function Controller() {
     deleteProject,
     displayAllTodos,
     displayAllProject,
-    updateProjectInfo,
-    updateTodo,
+    // updateProjectInfo,
+    // updateTodo,
   };
-}
+})();
