@@ -73,5 +73,6 @@ export const Controller = (function () {
     displayAllProject,
     updateProjectTitle,
     updateTodo,
+    todoDone,
   };
 })();
