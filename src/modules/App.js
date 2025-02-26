@@ -8,6 +8,8 @@ import UI from "./UI.js";
 
 export default (function App() {
   function init() {
+    // Render main panel
+    UI.renderMainPanel();
     // create a homepage project and intialize with some todos
     const home = new Project("home", []);
     home.fillRandomTodos(10);
