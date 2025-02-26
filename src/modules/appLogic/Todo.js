@@ -3,19 +3,19 @@ import { format } from "date-fns";
 export default class Todo {
   // Constructor
   constructor(
+    projectName = "home",
     title = "",
     description = "",
     dueDate = new Date(),
     priority = "",
-    isDone = false,
-    projectName = "home"
+    isDone = false
   ) {
+    this.projectName = projectName;
     this.title = title;
     this.description = description;
     this.dueDate = format(dueDate, "dd/MM/yyyy");
     this.priority = priority;
     this.isDone = isDone;
-    this.projectName = projectName;
     this.code = `${projectName.toLowerCase()}-${title
       .toLowerCase()
       .replaceAll(" ", "_")}`;
@@ -25,6 +25,15 @@ export default class Todo {
     return `${this.priority} - ${this.projectName} - ${this.title} (Due: ${
       this.dueDate
     }): ${this.description} // ${this.isDone ? "Done" : "In Progress"}`;
+  }
+
+  update(title, description, dueDate, priority) {
+    this.title = title || this.title;
+    this.description = description || this.description;
+    if (dueDate) {
+      this.dueDate = format(dueDate, "dd-MMM-yyyy");
+    }
+    this.priority = priority || this.priority;
   }
 
   checkDone() {

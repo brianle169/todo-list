@@ -52,9 +52,17 @@ export const Controller = (function () {
     }
   }
 
-  // function updateProjectInfo() {}
+  function updateProjectTitle(project, title) {
+    project.title = title;
+  }
 
-  // function updateTodo() {}
+  function updateTodo(todo, title, description, dueDate, priority) {
+    todo.update(title, description, dueDate, priority);
+  }
+
+  function todoDone(todo) {
+    todo.checkDone();
+  }
 
   return {
     addTodo,
@@ -63,7 +71,7 @@ export const Controller = (function () {
     deleteProject,
     displayAllTodos,
     displayAllProject,
-    // updateProjectInfo,
-    // updateTodo,
+    updateProjectTitle,
+    updateTodo,
   };
 })();
