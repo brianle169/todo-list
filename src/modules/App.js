@@ -8,10 +8,17 @@ import UI from "./UI.js";
 
 export default (function App() {
   let data;
+  const projList = [];
 
   function loadData() {}
 
-  function createNewProject(event) {}
+  function createNewProject() {
+    projList.push(Controller.addProject("Test Custom", "custom"));
+  }
+
+  function getData() {
+    return projList;
+  }
 
   function init() {
     // create a homepage project and intialize with some todos
@@ -23,16 +30,9 @@ export default (function App() {
     const custom2 = Controller.addProject("Custom 2", "custom");
     const custom3 = Controller.addProject("Custom 3", "custom");
     const custom4 = Controller.addProject("Custom 4", "custom");
-    const projList = [
-      home,
-      today,
-      important,
-      task,
-      custom1,
-      custom2,
-      custom3,
-      custom4,
-    ];
+    projList.push(
+      ...[home, today, important, task, custom1, custom2, custom3, custom4]
+    );
 
     // Load data from localStorage
     // let data = loadData();
@@ -50,5 +50,5 @@ export default (function App() {
     // Render the todos
     // UI.renderTodoBody();
   }
-  return { init, createNewProject };
+  return { init, createNewProject, getData };
 })();

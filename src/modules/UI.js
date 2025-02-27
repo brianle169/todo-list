@@ -7,7 +7,7 @@ export default (function UI() {
     // create banner with logo
     const banner = document.createElement("div");
     const bannerText = document.createElement("p");
-    bannerText.textContent = "To-do List";
+    bannerText.textContent = "To-Dojo";
     banner.classList.add("banner");
     banner.appendChild(bannerText); // Ensure bannerText is appended to banner
     return banner;
@@ -35,7 +35,6 @@ export default (function UI() {
     const addProjectButton = document.createElement("button");
     addProjectButton.classList.add(...["btn", "add-project"]);
     addProjectButton.textContent = "Add Project";
-    addProjectButton.addEventListener("click", App.createNewProject);
 
     nav.appendChild(defaultSection);
     nav.appendChild(customSection);
@@ -60,7 +59,7 @@ export default (function UI() {
     mainPanel.appendChild(banner);
     mainPanel.appendChild(nav);
     mainPanel.appendChild(todoBody);
-    // mainPanel.appendChild(footer);
+    mainPanel.appendChild(footer);
     return mainPanel;
   }
 
@@ -71,15 +70,30 @@ export default (function UI() {
     return projItem;
   }
 
+  function addProjectHandler() {
+    console.log("Pressed");
+    App.createNewProject();
+    let newData = App.getData();
+    console.log(newData);
+    let nav = document.querySelector(".nav-bar");
+    if (nav.innerHTML) {
+      nav.innerHTML = "";
+    }
+    nav.innerHTML = createNav().innerHTML;
+
+    renderNavContent(newData);
+  }
+
   function renderMainPanel() {
     const mainPanel = createMainPanel();
     body.appendChild(mainPanel);
   }
 
   function renderNavContent(projectList) {
-    const nav = document.querySelector(".nav-bar");
     const defaultSection = document.querySelector(".default-section");
     const customSection = document.querySelector(".custom-section");
+    const addProjectButton = document.querySelector(".add-project");
+    addProjectButton.addEventListener("click", addProjectHandler);
 
     // Create and add a title to custom section
     const customHeader = document.createElement("p");

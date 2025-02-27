@@ -112,7 +112,7 @@ footer {
   padding: 10px 0px;
 }
 
-@media screen and (min-width: 1650px) {
+@media screen and (min-width: 1300px) {
   body {
     display: flex;
     justify-content: center;
@@ -120,16 +120,16 @@ footer {
   }
 
   .main {
-    width: 1600px;
-    height: 70%;
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: max-content 1fr max-content;
+    grid-template-areas: "banner banner" "nav todo-body" "footer footer";
+    width: 1250px;
+    height: 90%;
     background-color: #ffffff;
     -webkit-box-shadow: 0px 10px 32px -2px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 10px 32px -2px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 10px 32px -2px rgba(0, 0, 0, 0.75);
-    display: grid;
-    grid-template-columns: 20% 1fr;
-    grid-template-rows: 10% 1fr max-content;
-    grid-template-areas: "banner banner" "nav todo-body" "footer footer";
   }
 
   .banner {
@@ -137,20 +137,20 @@ footer {
     grid-area: banner;
     justify-content: flex-start;
     align-items: center;
-    padding: 20px 50px;
+    padding: 20px 40px;
     background-color: rgb(131, 216, 180);
     color: #ffffff;
   }
 
   .banner p {
-    font-size: 3rem;
+    font-size: clamp(2rem, 3vh, 3rem);
     font-weight: 800;
   }
 
   footer {
     grid-area: footer;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
     background-color: black;
     color: #ffffff;
@@ -158,19 +158,22 @@ footer {
   }
 
   .nav-bar {
+    min-height: 100%;
     grid-area: nav;
     background-color: #e6f8eb;
-    padding: 40px;
+    padding: 30px 20px;
     display: grid;
     grid-template-rows: max-content 1fr max-content;
     grid-template-areas: "default" "custom" "add-project";
+    overflow: auto;
+    row-gap: 15px;
   }
 
   .project-name-container {
     display: flex;
     flex-direction: column;
     padding: 20px 0px;
-    row-gap: 15px;
+    /* row-gap: 15px; */
   }
 
   .project-name-container.default-section {
@@ -181,6 +184,9 @@ footer {
 
   .project-name-container.custom-section {
     grid-area: custom;
+    overflow: auto;
+    min-height: 20%;
+    padding-top: 0px;
   }
 
   .project-item,
@@ -191,12 +197,12 @@ footer {
   .project-item.type-default,
   .custom-section-header,
   .add-project {
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 1.5vh, 1.3rem);
     font-weight: 500;
   }
 
   .project-item.type-custom {
-    font-size: 1.3rem;
+    font-size: clamp(0.9rem, 1.2vh, 1.1rem);
     padding: 10px 0px 10px 20px;
   }
 
