@@ -1,4 +1,5 @@
 import App from "./App.js";
+import { Controller } from "./Controller.js";
 // UI module: controls the DOM
 export default (function UI() {
   const body = document.querySelector("body");
@@ -63,9 +64,16 @@ export default (function UI() {
     return mainPanel;
   }
 
+  function createTodoComponents(todo) {
+    const todoItem = document.createElement("div");
+    todoItem.textContent = todo.description;
+    return todoItem;
+  }
+
   function createProjectComponents(project) {
     const projItem = document.createElement("div");
     projItem.classList.add(...["project-item", `type-${project.type}`]);
+    projItem.id = `${project.name}`;
     projItem.textContent = `${project.name}`;
     return projItem;
   }
@@ -89,6 +97,16 @@ export default (function UI() {
     body.appendChild(mainPanel);
   }
 
+  function renderTodos(projectName) {
+    const todoBody = document.querySelector(".todo-container");
+    // get the correct project object
+    const project = App.getProject(projectName);
+    for (let todo of project.todos) {
+      let todoItem = createTodoComponents(todo);
+      todoBody.appendChild(todoItem);
+    }
+  }
+
   function renderNavContent(projectList) {
     const defaultSection = document.querySelector(".default-section");
     const customSection = document.querySelector(".custom-section");
@@ -104,6 +122,9 @@ export default (function UI() {
     // render default section first
     for (let project of projectList) {
       let projectItem = createProjectComponents(project);
+      projectItem.addEventListener("click", (event) =>
+        renderTodos(event.target.textContent)
+      );
       if (project.type === "default") {
         defaultSection.appendChild(projectItem);
       } else {

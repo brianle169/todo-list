@@ -20,9 +20,14 @@ export default (function App() {
     return projList;
   }
 
+  function getProject(projectName) {
+    return projList.find((project) => project.name === projectName);
+  }
+
   function init() {
     // create a homepage project and intialize with some todos
     const home = Controller.addProject("Home", "default");
+    home.fillRandomTodos(5);
     const today = Controller.addProject("Today", "default");
     const important = Controller.addProject("Important", "default");
     const task = Controller.addProject("Task", "default");
@@ -50,5 +55,5 @@ export default (function App() {
     // Render the todos
     // UI.renderTodoBody();
   }
-  return { init, createNewProject, getData };
+  return { init, createNewProject, getData, getProject };
 })();

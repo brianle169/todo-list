@@ -228,5 +228,6 @@ footer {
     grid-area: todo-body;
     display: flex;
     flex-direction: column;
+    overflow: auto;
   }
 }
