@@ -13,7 +13,7 @@ export default class Project {
       let td = new Todo(
         this.name,
         `Todo #${i + 1}`,
-        `Description of todo #${i + 1}`,
+        `${this.name} - Description of todo #${i + 1}`,
         new Date(new Date() - Math.random() * 1e10),
         "high",
         false

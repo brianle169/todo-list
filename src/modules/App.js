@@ -29,12 +29,19 @@ export default (function App() {
     const home = Controller.addProject("Home", "default");
     home.fillRandomTodos(5);
     const today = Controller.addProject("Today", "default");
+    today.fillRandomTodos(4);
     const important = Controller.addProject("Important", "default");
+    important.fillRandomTodos(3);
     const task = Controller.addProject("Task", "default");
+    task.fillRandomTodos(2);
     const custom1 = Controller.addProject("Custom 1", "custom");
+    custom1.fillRandomTodos(3);
     const custom2 = Controller.addProject("Custom 2", "custom");
+    custom2.fillRandomTodos(2);
     const custom3 = Controller.addProject("Custom 3", "custom");
+    custom3.fillRandomTodos(4);
     const custom4 = Controller.addProject("Custom 4", "custom");
+    custom4.fillRandomTodos(1);
     projList.push(
       ...[home, today, important, task, custom1, custom2, custom3, custom4]
     );
@@ -52,8 +59,8 @@ export default (function App() {
     // Render the navigation bar using project names
     UI.renderNavContent(projList);
 
-    // Render the todos
-    // UI.renderTodoBody();
+    // Render the todos from home project
+    UI.renderAllTodos();
   }
   return { init, createNewProject, getData, getProject };
 })();

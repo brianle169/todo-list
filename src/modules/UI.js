@@ -66,7 +66,8 @@ export default (function UI() {
 
   function createTodoComponents(todo) {
     const todoItem = document.createElement("div");
-    todoItem.textContent = todo.description;
+    todoItem.textContent = todo.info;
+    todoItem.classList.add(...["todo", `priority-${todo.priority}`]);
     return todoItem;
   }
 
@@ -99,11 +100,23 @@ export default (function UI() {
 
   function renderTodos(projectName) {
     const todoBody = document.querySelector(".todo-container");
+    todoBody.innerHTML = "";
     // get the correct project object
     const project = App.getProject(projectName);
     for (let todo of project.todos) {
       let todoItem = createTodoComponents(todo);
       todoBody.appendChild(todoItem);
+    }
+  }
+
+  function renderAllTodos() {
+    const data = App.getData();
+    const todoBody = document.querySelector(".todo-container");
+    for (let project of data) {
+      for (let todo of project.todos) {
+        let todoItem = createTodoComponents(todo);
+        todoBody.appendChild(todoItem);
+      }
     }
   }
 
@@ -132,5 +145,5 @@ export default (function UI() {
       }
     }
   }
-  return { renderMainPanel, renderNavContent };
+  return { renderMainPanel, renderNavContent, renderAllTodos };
 })();
