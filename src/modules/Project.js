@@ -14,7 +14,7 @@ export default class Project {
         this.name,
         `Todo #${i + 1}`,
         `${this.name} - Description of todo #${i + 1}`,
-        new Date(new Date() - Math.random() * 1e10),
+        new Date(new Date() - Math.random() * 1e8),
         "high",
         false
       );

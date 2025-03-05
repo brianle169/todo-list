@@ -43,4 +43,9 @@ export default class Todo {
   logInfo() {
     console.log(this.info);
   }
+
+  isToday() {
+    let today = format(new Date(), "dd/MM/yyyy");
+    return this.dueDate === today;
+  }
 }

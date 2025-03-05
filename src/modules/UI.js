@@ -1,5 +1,6 @@
 import App from "./App.js";
 import { Controller } from "./Controller.js";
+import { format } from "date-fns";
 // UI module: controls the DOM
 export default (function UI() {
   const body = document.querySelector("body");
@@ -101,17 +102,8 @@ export default (function UI() {
       nav.innerHTML = "";
     }
     nav.innerHTML = createNav().innerHTML;
-
     renderNavContent(newData);
-  }
-
-  function projectClickHandler(event) {
-    let projectName = event.target.textContent;
-    let previousProject = document.querySelector(".selected");
-    previousProject.classList.remove("selected");
-    event.target.classList.add("selected");
-    App.setCurrentProject(projectName);
-    renderTodos(projectName);
+    renderProject(App.getCurrentProject());
   }
 
   function renderMainPanel() {
@@ -119,33 +111,24 @@ export default (function UI() {
     body.appendChild(mainPanel);
   }
 
-  function renderTodos(projectName) {
-    if (projectName === "Home") {
-      renderHomeProject();
-    } else {
-      const todoBody = document.querySelector(".todo-container");
-      todoBody.innerHTML = "";
-      // get the correct project object
-      const project = App.getProject(projectName);
-      for (let todo of project.todos) {
-        let todoItem = createTodoComponents(todo);
-        todoBody.appendChild(todoItem);
-      }
-      createAddTodoButton();
+  function renderProject(projectName) {
+    // Check if "selected" class exists, remove it --> Switch to new project.
+    let previousProject = document.querySelector(".selected");
+    if (previousProject) {
+      previousProject.classList.remove("selected");
     }
-  }
+    let currentProject = document.getElementById(projectName);
+    currentProject.classList.add("selected");
 
-  function renderHomeProject() {
-    const data = App.getData();
-    const homeProject = document.getElementById("Home");
-    homeProject.classList.add("selected");
+    // Clear the todo container
     const todoBody = document.querySelector(".todo-container");
     todoBody.innerHTML = "";
-    for (let project of data) {
-      for (let todo of project.todos) {
-        let todoItem = createTodoComponents(todo);
-        todoBody.appendChild(todoItem);
-      }
+
+    // get the correct project object
+    const todos = App.getProject(projectName);
+    for (let todo of todos) {
+      let todoItem = createTodoComponents(todo);
+      todoBody.appendChild(todoItem);
     }
     createAddTodoButton();
   }
@@ -165,7 +148,10 @@ export default (function UI() {
     // render default section first
     for (let project of projectList) {
       let projectItem = createProjectComponents(project);
-      projectItem.addEventListener("click", projectClickHandler);
+      // projectItem.addEventListener("click", projectClickHandler);
+      projectItem.addEventListener("click", (event) => {
+        renderProject(event.target.id);
+      });
       if (project.type === "default") {
         defaultSection.appendChild(projectItem);
       } else {
@@ -173,5 +159,9 @@ export default (function UI() {
       }
     }
   }
-  return { renderMainPanel, renderNavContent, renderHomeProject };
+  return {
+    renderMainPanel,
+    renderNavContent,
+    renderProject,
+  };
 })();

@@ -225,10 +225,15 @@ footer {
   }
 
   .add-project:hover,
-  .project-item:hover,
+  /* .project-item:hover, */
   .add-todo:hover {
     cursor: pointer;
     background-color: #cee4d4;
+  }
+
+  .project-item:hover {
+    cursor: pointer;
+    border: 2px solid rgb(131, 216, 180);
   }
 
   .todo-container {
@@ -236,8 +241,8 @@ footer {
     display: flex;
     flex-direction: column;
     overflow: auto;
-    padding: 20px;
-    gap: 10px;
+    padding: 20px 40px;
+    gap: 20px;
   }
 
   .todo {
