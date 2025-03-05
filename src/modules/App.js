@@ -7,13 +7,25 @@ import UI from "./UI.js";
 // combine those and control the state of the app. It will also store the variables, arrays, todos, etc.
 
 export default (function App() {
-  let data;
+  let currentProject = "Home";
+  let testProjectCounter = 1;
   const projList = [];
 
-  function loadData() {}
+  function setCurrentProject(projectName) {
+    currentProject = projectName;
+  }
+
+  function getCurrentProject() {
+    return currentProject;
+  }
 
   function createNewProject() {
-    projList.push(Controller.addProject("Test Custom", "custom"));
+    let newProj = Controller.addProject(
+      `Test Custom ${testProjectCounter++}`,
+      "custom"
+    );
+    projList.push(newProj);
+    setCurrentProject(newProj.name);
   }
 
   function getData() {
@@ -29,7 +41,6 @@ export default (function App() {
     const home = Controller.addProject("Home", "default");
     home.fillRandomTodos(5);
     const today = Controller.addProject("Today", "default");
-    today.fillRandomTodos(4);
     const important = Controller.addProject("Important", "default");
     important.fillRandomTodos(3);
     const task = Controller.addProject("Task", "default");
@@ -60,7 +71,14 @@ export default (function App() {
     UI.renderNavContent(projList);
 
     // Render the todos from home project
-    UI.renderAllTodos();
+    UI.renderHomeProject();
   }
-  return { init, createNewProject, getData, getProject };
+  return {
+    init,
+    createNewProject,
+    getData,
+    getProject,
+    setCurrentProject,
+    getCurrentProject,
+  };
 })();

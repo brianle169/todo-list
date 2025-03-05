@@ -74,16 +74,28 @@ export default (function UI() {
   function createProjectComponents(project) {
     const projItem = document.createElement("div");
     projItem.classList.add(...["project-item", `type-${project.type}`]);
+    if (App.getCurrentProject() === project.name) {
+      projItem.classList.add("selected");
+    }
     projItem.id = `${project.name}`;
     projItem.textContent = `${project.name}`;
     return projItem;
   }
 
+  function createAddTodoButton() {
+    const todoBody = document.querySelector(".todo-container");
+    const addTodoButton = document.createElement("button");
+    addTodoButton.classList.add(...["btn", "add-todo"]);
+    addTodoButton.textContent = "Add Todo";
+    addTodoButton.addEventListener("click", addTodoHandler);
+    todoBody.appendChild(addTodoButton);
+  }
+
+  function addTodoHandler() {}
+
   function addProjectHandler() {
-    console.log("Pressed");
     App.createNewProject();
     let newData = App.getData();
-    console.log(newData);
     let nav = document.querySelector(".nav-bar");
     if (nav.innerHTML) {
       nav.innerHTML = "";
@@ -93,31 +105,49 @@ export default (function UI() {
     renderNavContent(newData);
   }
 
+  function projectClickHandler(event) {
+    let projectName = event.target.textContent;
+    let previousProject = document.querySelector(".selected");
+    previousProject.classList.remove("selected");
+    event.target.classList.add("selected");
+    App.setCurrentProject(projectName);
+    renderTodos(projectName);
+  }
+
   function renderMainPanel() {
     const mainPanel = createMainPanel();
     body.appendChild(mainPanel);
   }
 
   function renderTodos(projectName) {
-    const todoBody = document.querySelector(".todo-container");
-    todoBody.innerHTML = "";
-    // get the correct project object
-    const project = App.getProject(projectName);
-    for (let todo of project.todos) {
-      let todoItem = createTodoComponents(todo);
-      todoBody.appendChild(todoItem);
+    if (projectName === "Home") {
+      renderHomeProject();
+    } else {
+      const todoBody = document.querySelector(".todo-container");
+      todoBody.innerHTML = "";
+      // get the correct project object
+      const project = App.getProject(projectName);
+      for (let todo of project.todos) {
+        let todoItem = createTodoComponents(todo);
+        todoBody.appendChild(todoItem);
+      }
+      createAddTodoButton();
     }
   }
 
-  function renderAllTodos() {
+  function renderHomeProject() {
     const data = App.getData();
+    const homeProject = document.getElementById("Home");
+    homeProject.classList.add("selected");
     const todoBody = document.querySelector(".todo-container");
+    todoBody.innerHTML = "";
     for (let project of data) {
       for (let todo of project.todos) {
         let todoItem = createTodoComponents(todo);
         todoBody.appendChild(todoItem);
       }
     }
+    createAddTodoButton();
   }
 
   function renderNavContent(projectList) {
@@ -135,9 +165,7 @@ export default (function UI() {
     // render default section first
     for (let project of projectList) {
       let projectItem = createProjectComponents(project);
-      projectItem.addEventListener("click", (event) =>
-        renderTodos(event.target.textContent)
-      );
+      projectItem.addEventListener("click", projectClickHandler);
       if (project.type === "default") {
         defaultSection.appendChild(projectItem);
       } else {
@@ -145,5 +173,5 @@ export default (function UI() {
       }
     }
   }
-  return { renderMainPanel, renderNavContent, renderAllTodos };
+  return { renderMainPanel, renderNavContent, renderHomeProject };
 })();
