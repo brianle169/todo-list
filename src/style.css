@@ -5,6 +5,7 @@
   --priority-color-low: rgb(39, 206, 111);
   --priority-color-medium: rgb(255, 213, 0);
   --priority-color-high: rgb(239, 39, 99);
+  --status-done-foreground: rgba(0, 0, 0, 0.164);
 }
 
 /* Reset from Josh W. Comeau */
@@ -256,13 +257,16 @@ footer {
     width: 23px;
   }
 
-  .delete svg:hover {
+  .delete svg:hover,
+  .todo.done .delete svg:hover {
     fill: var(--priority-color-high);
   }
 
   .edit svg:hover path,
   .expand svg:hover path,
-  .shrink svg:hover path {
+  .todo.done .expand svg:hover path,
+  .shrink svg:hover path,
+  .todo.done .shrink svg:hover path {
     stroke: var(--priority-color-low);
   }
 
@@ -337,6 +341,28 @@ footer {
   .todo > * {
     display: flex;
     align-items: center;
+  }
+
+  .todo.done .todo-title,
+  .todo.done .todo-description,
+  .todo.done .todo-due-date {
+    text-decoration: line-through;
+    color: var(--status-done-foreground);
+  }
+
+  .todo.done .delete svg {
+    fill: var(--status-done-foreground);
+  }
+
+  .todo.done .edit {
+    cursor: not-allowed;
+    user-select: none;
+  }
+
+  .todo.done .edit svg path,
+  .todo.done .expand svg path,
+  .todo.done .shrink svg path {
+    stroke: var(--status-done-foreground);
   }
 
   .todo-left-cont {

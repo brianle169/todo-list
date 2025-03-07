@@ -67,6 +67,16 @@ export default (function UI() {
     const progress = document.createElement("div");
     progress.classList.add("todo-info", "todo-progress");
     progress.innerHTML = `<input type="checkbox" name="progress" id="progress" />`;
+    const progressInput = progress.querySelector(".todo-progress input");
+    progressInput.addEventListener("change", () => {
+      todo.checkDone();
+      console.log(todo.isDone);
+      if (todo.isDone) {
+        todoItem.classList.add("done");
+      } else {
+        todoItem.classList.remove("done");
+      }
+    });
     todoItem.appendChild(progress);
 
     const title = document.createElement("div");
