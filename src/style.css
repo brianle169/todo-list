@@ -232,7 +232,10 @@ footer {
     border: 2px solid #83d8b4;
   }
 
-  .project-item .delete {
+  .edit,
+  .delete,
+  .expand,
+  .shrink {
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -241,17 +244,26 @@ footer {
     border-radius: 0px;
     border: none;
     padding: 0;
-    width: 25px;
-    height: 25px;
+    width: 23px;
+    height: 23px;
   }
 
-  .project-item .delete svg {
+  .edit svg,
+  .delete svg,
+  .expand svg,
+  .shrink svg {
     display: block;
-    width: 25px;
+    width: 23px;
   }
 
-  .project-item .delete svg:hover {
+  .delete svg:hover {
     fill: var(--priority-color-high);
+  }
+
+  .edit svg:hover path,
+  .expand svg:hover path,
+  .shrink svg:hover path {
+    stroke: var(--priority-color-low);
   }
 
   .add-project,
@@ -288,11 +300,6 @@ footer {
     background-color: rgb(195, 117, 141);
   }
 
-  /* .add-project.active {
-    position: fixed;
-    opacity: 0;
-  } */
-
   .project-item:hover {
     cursor: pointer;
     background-color: #ffffff;
@@ -308,11 +315,36 @@ footer {
   }
 
   .todo {
+    display: flex;
+    justify-content: space-between;
     height: max-content;
     background-color: #edebeb;
-    padding: 5px;
+    padding: 15px;
     transform: translateY(0px); /* Add this line */
     transition: transform 0.2s ease; /* Add this line for smooth transition */
+  }
+
+  .todo .todo-progress {
+    display: flex;
+    align-items: center;
+  }
+
+  .todo input[type="checkbox"] {
+    width: 23px;
+    height: 23px;
+  }
+
+  .todo > * {
+    display: flex;
+    align-items: center;
+  }
+
+  .todo-left-cont {
+    gap: 20px;
+  }
+
+  .todo-right-cont {
+    gap: 30px;
   }
 
   .project-item:hover,

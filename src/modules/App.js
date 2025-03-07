@@ -60,6 +60,7 @@ export default (function App() {
       priority
     );
     let project = projList.find((project) => project.name === projectName);
+    console.log(projList);
     project.todos.push(newTodo);
   }
 
@@ -80,7 +81,7 @@ export default (function App() {
   function init() {
     // create a homepage project and intialize with some todos
     const home = Controller.addProject("Home", "default");
-    // home.fillRandomTodos(5);
+
     const today = Controller.addProject("Today", "default");
     const important = Controller.addProject("Important", "default");
     // important.fillRandomTodos(3);
@@ -88,7 +89,13 @@ export default (function App() {
     // task.fillRandomTodos(2);
     const custom = Controller.addProject("Custom", "custom");
     projList.push(...[home, today, important, task, custom]);
-
+    createNewTodo(
+      "Home",
+      "Welcome to Todo App",
+      "This is a default project",
+      "2021-12-31",
+      "high"
+    );
     // Load data from localStorage
     // let data = loadData();
 

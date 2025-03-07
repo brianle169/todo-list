@@ -14,7 +14,7 @@ export default class Todo {
     this.title = title;
     this.description = description;
     console.log(dueDate);
-    this.dueDate = format(parseISO(dueDate), "dd/MM/yyyy");
+    this.dueDate = format(parseISO(dueDate), "PP");
     console.log(this.dueDate);
     this.priority = priority;
     this.isDone = isDone;
