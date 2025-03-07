@@ -43,13 +43,24 @@ export default (function App() {
     return todayTodos;
   }
 
-  function createNewProject() {
-    let newProj = Controller.addProject(
-      `Test Custom ${testProjectCounter++}`,
-      "custom"
-    );
+  function createNewProject(projectName) {
+    // actual code to creat new project will be implemented later
+    let newProj = Controller.addProject(projectName, "custom");
     projList.push(newProj);
     setCurrentProject(newProj.name);
+  }
+
+  function createNewTodo(projectName) {
+    // actual code to creat new todo will be implemented later
+    let newTodo = Controller.addTodo(
+      projectName,
+      `Test Todo ${testProjectCounter++}`,
+      "Test description",
+      new Date(),
+      "low"
+    );
+    let project = projList.find((project) => project.name === projectName);
+    project.todos.push(newTodo);
   }
 
   function getData() {
@@ -96,6 +107,7 @@ export default (function App() {
   return {
     init,
     createNewProject,
+    createNewTodo,
     getData,
     getProject,
     setCurrentProject,

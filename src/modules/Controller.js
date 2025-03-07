@@ -8,16 +8,16 @@ export const Controller = (function () {
   }
 
   function addTodo(
+    projectName = "Home",
     title,
     description,
     dueDate,
-    priority,
-    projectName = "home"
+    priority
   ) {
-    return new Todo(title, description, dueDate, priority, false, projectName);
+    return new Todo(projectName, title, description, dueDate, priority, false);
   }
 
-  function deleteTodo(project, projectName = "home", title) {
+  function deleteTodo(project, projectName = "Home", title) {
     let target = `${projectName.toLowerCase()}-${title
       .toLowerCase()
       .replaceAll(" ", "_")}`;

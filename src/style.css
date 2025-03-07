@@ -1,5 +1,7 @@
 :root {
   --ratio: 16 / 9;
+  --add-project-form-height: 400px;
+  --add-project-form-width: 600px;
 }
 
 /* Reset from Josh W. Comeau */
@@ -217,19 +219,40 @@ footer {
   }
 
   .add-project,
-  .add-todo {
+  .add-todo,
+  button[type="submit"],
+  .btn.cancel {
     background: transparent;
-    background-color: rgb(131, 216, 180);
     color: #ffffff;
     border: none;
   }
 
-  .add-project:hover,
-  /* .project-item:hover, */
-  .add-todo:hover {
-    cursor: pointer;
-    background-color: #cee4d4;
+  .add-project,
+  .add-todo,
+  button[type="submit"] {
+    background-color: rgb(131, 216, 180);
   }
+
+  .add-project:hover,
+  .add-todo:hover,
+  button[type="submit"]:hover {
+    cursor: pointer;
+    background-color: rgb(117, 195, 162);
+  }
+
+  .btn.cancel {
+    background-color: rgb(216, 131, 156);
+  }
+
+  .btn.cancel:hover {
+    cursor: pointer;
+    background-color: rgb(195, 117, 141);
+  }
+
+  /* .add-project.active {
+    position: fixed;
+    opacity: 0;
+  } */
 
   .project-item:hover {
     cursor: pointer;
@@ -257,5 +280,57 @@ footer {
     order: 2;
     width: 30%;
     align-self: center;
+  }
+
+  .add-project-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+  }
+
+  .add-project-form.active {
+    opacity: 1;
+  }
+
+  .add-project-form input {
+    padding: 5px;
+    border-radius: 5px;
+    border: transparent;
+  }
+
+  input[type="text"]:focus {
+    border: transparent;
+    outline: none;
+  }
+
+  input[type="text"]::placeholder {
+    font-style: italic;
+  }
+
+  .add-project-form .btn-cont {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 10px;
+  }
+
+  .btn-cont .btn {
+    flex: 1;
+  }
+
+  .add-todo-form {
+    position: absolute;
+    border-radius: 5px;
+    border: 2px solid grey;
+    top: calc(50% - var(--add-project-form-height) / 2);
+    left: calc(50% - var(--add-project-form-width) / 2);
+    background-color: #ffffff;
+    height: var(--add-project-form-height);
+    width: var(--add-project-form-width);
+    opacity: 0;
+  }
+
+  .add-todo-form.active {
+    opacity: 1;
   }
 }

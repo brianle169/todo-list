@@ -1,6 +1,6 @@
 import App from "./App.js";
 import { Controller } from "./Controller.js";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 // UI module: controls the DOM
 export default (function UI() {
   const body = document.querySelector("body");
@@ -34,13 +34,8 @@ export default (function UI() {
       ...["project-name-container", "custom-section"]
     );
 
-    const addProjectButton = document.createElement("button");
-    addProjectButton.classList.add(...["btn", "add-project"]);
-    addProjectButton.textContent = "Add Project";
-
     nav.appendChild(defaultSection);
     nav.appendChild(customSection);
-    nav.appendChild(addProjectButton);
     return nav;
   }
 
@@ -83,27 +78,75 @@ export default (function UI() {
     return projItem;
   }
 
+  function createAddProjectButton() {
+    const addProjectButton = document.createElement("button");
+    addProjectButton.classList.add(...["btn", "add-project"]);
+    addProjectButton.textContent = "Add Project";
+    addProjectButton.addEventListener("click", addProjectHandler);
+    return addProjectButton;
+  }
+
   function createAddTodoButton() {
-    const todoBody = document.querySelector(".todo-container");
     const addTodoButton = document.createElement("button");
     addTodoButton.classList.add(...["btn", "add-todo"]);
     addTodoButton.textContent = "Add Todo";
     addTodoButton.addEventListener("click", addTodoHandler);
-    todoBody.appendChild(addTodoButton);
+    return addTodoButton;
   }
 
-  function addTodoHandler() {}
+  function createAddProjectForm() {
+    let addProjectForm = document.createElement("form");
+    addProjectForm.classList.add(...["add-project-form", "active"]);
+    addProjectForm.innerHTML = `
+      <input
+        type="text"
+        name="projectName"
+        id="projectName"
+        placeholder="Project Name"
+        autocomplete="off"
+        required
+      />
+      <div class="btn-cont">
+        <button class="btn" type="submit">Add</button>
+        <button class="btn cancel">Cancel</button>
+      </div>`;
+    return addProjectForm;
+  }
 
-  function addProjectHandler() {
-    App.createNewProject();
-    let newData = App.getData();
-    let nav = document.querySelector(".nav-bar");
-    if (nav.innerHTML) {
-      nav.innerHTML = "";
-    }
-    nav.innerHTML = createNav().innerHTML;
-    renderNavContent(newData);
+  // Task: create a form that pops up to fill in for todo information.
+  function addTodoHandler() {
+    // pop up a form to add a new todo
+    // get the data from the form
+    // create new todo and push to the project todo-list
+    let newTodo = App.createNewTodo(App.getCurrentProject());
+    // render the project again
     renderProject(App.getCurrentProject());
+  }
+
+  // Task: create a form that pops up to fill in for Project information. Create a project on submission.
+  function addProjectHandler(event) {
+    // replace add project button with a form
+    const navBar = document.querySelector(".nav-bar");
+    navBar.replaceChild(createAddProjectForm(), navBar.lastChild);
+    document.getElementById("projectName").focus();
+
+    const addProjectForm = document.querySelector(".add-project-form");
+
+    addProjectForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      event.target.remove();
+      App.createNewProject(event.target.projectName.value);
+      renderNavContent(App.getData());
+      renderProject(App.getCurrentProject());
+    });
+
+    // Set up cancel button
+    const cancelButton = document.querySelector(".btn.cancel");
+    cancelButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      addProjectForm.remove();
+      renderNavContent(App.getData());
+    });
   }
 
   function renderMainPanel() {
@@ -119,6 +162,7 @@ export default (function UI() {
     }
     let currentProject = document.getElementById(projectName);
     currentProject.classList.add("selected");
+    App.setCurrentProject(projectName);
 
     // Clear the todo container
     const todoBody = document.querySelector(".todo-container");
@@ -130,14 +174,15 @@ export default (function UI() {
       let todoItem = createTodoComponents(todo);
       todoBody.appendChild(todoItem);
     }
-    createAddTodoButton();
+    todoBody.appendChild(createAddTodoButton());
   }
 
   function renderNavContent(projectList) {
+    const navBar = document.querySelector(".nav-bar");
     const defaultSection = document.querySelector(".default-section");
+    defaultSection.innerHTML = "";
     const customSection = document.querySelector(".custom-section");
-    const addProjectButton = document.querySelector(".add-project");
-    addProjectButton.addEventListener("click", addProjectHandler);
+    customSection.innerHTML = "";
 
     // Create and add a title to custom section
     const customHeader = document.createElement("p");
@@ -148,7 +193,6 @@ export default (function UI() {
     // render default section first
     for (let project of projectList) {
       let projectItem = createProjectComponents(project);
-      // projectItem.addEventListener("click", projectClickHandler);
       projectItem.addEventListener("click", (event) => {
         renderProject(event.target.id);
       });
@@ -158,6 +202,9 @@ export default (function UI() {
         customSection.appendChild(projectItem);
       }
     }
+
+    // Add the add project button to the navBar
+    navBar.appendChild(createAddProjectButton());
   }
   return {
     renderMainPanel,

@@ -3,7 +3,7 @@ import { format } from "date-fns";
 export default class Todo {
   // Constructor
   constructor(
-    projectName = "home",
+    projectName = "Home",
     title = "",
     description = "",
     dueDate = new Date(),
@@ -13,6 +13,7 @@ export default class Todo {
     this.projectName = projectName;
     this.title = title;
     this.description = description;
+    console.log(dueDate);
     this.dueDate = format(dueDate, "dd/MM/yyyy");
     this.priority = priority;
     this.isDone = isDone;
