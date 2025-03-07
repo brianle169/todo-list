@@ -5,11 +5,11 @@ import { add, format } from "date-fns";
 export default (function UI() {
   const body = document.querySelector("body");
 
-  function createBanner() {
+  function createBanner(text) {
     // create banner with logo
     const banner = document.createElement("div");
     const bannerText = document.createElement("p");
-    bannerText.textContent = "To-Dojo";
+    bannerText.textContent = text || "To-Dojo";
     banner.classList.add("banner");
     banner.appendChild(bannerText); // Ensure bannerText is appended to banner
     return banner;
@@ -96,7 +96,7 @@ export default (function UI() {
 
   function createAddProjectForm() {
     let addProjectForm = document.createElement("form");
-    addProjectForm.classList.add(...["add-project-form", "active"]);
+    addProjectForm.classList.add("add-project-form");
     addProjectForm.innerHTML = `
       <input
         type="text"
@@ -113,18 +113,112 @@ export default (function UI() {
     return addProjectForm;
   }
 
+  function createAddTodoPopUp() {
+    const blurOverlay = document.createElement("div");
+    const formCont = document.createElement("div");
+    const addTodoForm = document.createElement("form");
+    const formBanner = createBanner("New Todo");
+    const closeFormButton = document.createElement("button");
+
+    closeFormButton.textContent = "X";
+    closeFormButton.classList.add("btn", "close-form");
+    formBanner.appendChild(closeFormButton);
+
+    blurOverlay.classList.add(...["blur-overlay", "active"]);
+    formCont.classList.add("add-todo-form-container");
+    addTodoForm.classList.add("add-todo-form");
+    addTodoForm.classList.add("active");
+
+    formCont.appendChild(formBanner);
+    formCont.appendChild(addTodoForm);
+    body.appendChild(blurOverlay);
+    body.appendChild(formCont);
+
+    addTodoForm.innerHTML = `<div class="entry title">
+        <input
+          type="text"
+          name="title"
+          id="title"
+          placeholder="Title"
+          autocomplete="off"
+          autofocus="on"
+          required
+        />
+      </div>
+      <div class="entry description">
+        <input
+          type="text"
+          name="description"
+          id="description"
+          placeholder="Description..."
+          autocomplete="off"
+        />
+      </div>
+      <fieldset class="priority-options">
+        <legend>Priority</legend>
+        <div class="entry priority">
+          <input type="radio" name="priority" id="low" value="low" required />
+          <label for="low">Low</label>
+        </div>
+        <div class="entry priority">
+          <input
+            type="radio"
+            name="priority"
+            id="medium"
+            value="medium"
+            required
+          />
+          <label for="medium">Medium</label>
+        </div>
+        <div class="entry priority">
+          <input type="radio" name="priority" id="high" value="high" required />
+          <label for="high">High</label>
+        </div>
+      </fieldset>
+      <div class="entry due-date">
+        <label for="dueDate">Due date</label>
+        <input type="date" name="dueDate" id="dueDate" required />
+      </div>
+      <button class="btn submit-todo" type="submit">Add</button>`;
+
+    addTodoForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const title = event.target.title.value;
+      const description = event.target.description.value;
+      const priority = event.target.priority.value;
+      const dueDate = event.target.dueDate.value;
+      console.log(dueDate);
+      console.log(new Date(dueDate + "T00:00:00"));
+      App.createNewTodo(
+        App.getCurrentProject(),
+        title,
+        description,
+        dueDate,
+        priority
+      );
+      renderProject(App.getCurrentProject());
+      blurOverlay.remove();
+      formCont.remove();
+    });
+    closeFormButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      blurOverlay.remove();
+      formCont.remove();
+    });
+  }
   // Task: create a form that pops up to fill in for todo information.
   function addTodoHandler() {
+    createAddTodoPopUp();
     // pop up a form to add a new todo
     // get the data from the form
     // create new todo and push to the project todo-list
-    let newTodo = App.createNewTodo(App.getCurrentProject());
+    // let newTodo = App.createNewTodo(App.getCurrentProject());
     // render the project again
-    renderProject(App.getCurrentProject());
+    // renderProject(App.getCurrentProject());
   }
 
   // Task: create a form that pops up to fill in for Project information. Create a project on submission.
-  function addProjectHandler(event) {
+  function addProjectHandler() {
     // replace add project button with a form
     const navBar = document.querySelector(".nav-bar");
     navBar.replaceChild(createAddProjectForm(), navBar.lastChild);

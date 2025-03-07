@@ -1,7 +1,10 @@
 :root {
   --ratio: 16 / 9;
-  --add-project-form-height: 400px;
-  --add-project-form-width: 600px;
+  --add-project-form-height: max-content;
+  --add-project-form-width: 700px;
+  --priority-color-low: rgb(39, 206, 111);
+  --priority-color-medium: rgb(255, 213, 0);
+  --priority-color-high: rgb(239, 39, 99);
 }
 
 /* Reset from Josh W. Comeau */
@@ -121,6 +124,11 @@ footer {
     align-items: center;
   }
 
+  /* .btn {
+    font-size: 1.5rem;
+    font-weight: 800;
+  } */
+
   .main {
     display: grid;
     grid-template-columns: 20% 1fr;
@@ -221,10 +229,13 @@ footer {
   .add-project,
   .add-todo,
   button[type="submit"],
-  .btn.cancel {
+  .btn.cancel,
+  .btn.close-form {
     background: transparent;
     color: #ffffff;
     border: none;
+    padding: 8px;
+    font-weight: 700;
   }
 
   .add-project,
@@ -272,8 +283,28 @@ footer {
     height: max-content;
     background-color: #edebeb;
     padding: 5px;
-    border: 3px solid #c6f2d3;
-    border-radius: 5px;
+    transform: translateY(0px); /* Add this line */
+    transition: transform 0.2s ease; /* Add this line for smooth transition */
+  }
+
+  .todo:hover {
+    -webkit-box-shadow: 6px 7px 9px -3px rgba(97, 93, 97, 1);
+    -moz-box-shadow: 6px 7px 9px -3px rgba(97, 93, 97, 1);
+    box-shadow: 6px 7px 9px -3px rgba(97, 93, 97, 1);
+    transform: translateY(-3px); /* Add this line */
+    transition: transform 0.3s ease; /* Add this line for smooth transition */
+  }
+
+  .todo.priority-low {
+    border-left: 5px solid var(--priority-color-low);
+  }
+
+  .todo.priority-medium {
+    border-left: 5px solid var(--priority-color-medium);
+  }
+
+  .todo.priority-high {
+    border-left: 5px solid var(--priority-color-high);
   }
 
   .add-todo {
@@ -286,11 +317,6 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    opacity: 0;
-  }
-
-  .add-project-form.active {
-    opacity: 1;
   }
 
   .add-project-form input {
@@ -318,19 +344,129 @@ footer {
     flex: 1;
   }
 
-  .add-todo-form {
+  .add-todo-form-container {
     position: absolute;
-    border-radius: 5px;
     border: 2px solid grey;
-    top: calc(50% - var(--add-project-form-height) / 2);
-    left: calc(50% - var(--add-project-form-width) / 2);
+    border-radius: 5px;
+  }
+
+  .add-todo-form-container .banner {
+    border-radius: 5px 5px 0px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .add-todo-form-container .banner button {
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 800;
+    padding: 5px;
+    margin-right: 5px;
+  }
+
+  .add-todo-form-container .banner button:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .add-todo-form {
+    border-radius: 0px 0px 5px 5px;
     background-color: #ffffff;
     height: var(--add-project-form-height);
     width: var(--add-project-form-width);
     opacity: 0;
+    padding: 30px;
+    display: grid;
+    grid-template-areas: "title title" "description description" "priority duedate" "submit submit";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, max-content);
+    gap: 15px;
   }
 
   .add-todo-form.active {
     opacity: 1;
+  }
+
+  .blur-overlay.active {
+    position: absolute;
+    backdrop-filter: blur(15px);
+    height: 100%;
+    width: 100%;
+  }
+
+  .entry,
+  .priority-options {
+    padding: 5px;
+  }
+
+  .title > input,
+  .description > input {
+    width: 100%;
+    border: transparent;
+  }
+
+  .title > input:focus,
+  .description > input:focus {
+    border: transparent;
+  }
+
+  .title {
+    grid-area: title;
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+
+  .description {
+    grid-area: description;
+    font-size: 1.1rem;
+  }
+
+  .priority-options {
+    grid-area: priority;
+    border: none;
+    display: flex;
+    font-size: 1.1rem;
+    gap: 20px;
+  }
+
+  label[for="low"] {
+    color: var(--priority-color-low);
+  }
+
+  label[for="medium"] {
+    color: var(--priority-color-medium);
+  }
+
+  label[for="high"] {
+    color: var(--priority-color-high);
+  }
+
+  .due-date {
+    grid-area: duedate;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 1.1rem;
+    width: max-content;
+  }
+
+  .due-date > input {
+    border: transparent;
+  }
+
+  legend,
+  .due-date label {
+    font-weight: 700;
+  }
+
+  .submit-todo {
+    grid-area: submit;
+    font-size: 1.3rem;
+    width: 30%;
+    justify-self: center;
+    margin-top: 20px;
   }
 }

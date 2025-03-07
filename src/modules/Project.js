@@ -8,19 +8,19 @@ export default class Project {
     this.todos = todos;
   }
 
-  fillRandomTodos(num) {
-    for (let i = 0; i < num; i++) {
-      let td = new Todo(
-        this.name,
-        `Todo #${i + 1}`,
-        `${this.name} - Description of todo #${i + 1}`,
-        new Date(new Date() - Math.random() * 1e8),
-        "high",
-        false
-      );
-      this.todos.push(td);
-    }
-  }
+  // fillRandomTodos(num) {
+  //   for (let i = 0; i < num; i++) {
+  //     let td = new Todo(
+  //       this.name,
+  //       `Todo #${i + 1}`,
+  //       `${this.name} - Description of todo #${i + 1}`,
+  //       new Date(new Date() - Math.random() * 1e8),
+  //       "high",
+  //       false
+  //     );
+  //     this.todos.push(td);
+  //   }
+  // }
 
   logTodos() {
     for (const todo of this.todos) {

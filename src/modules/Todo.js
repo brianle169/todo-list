@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 // Todo's module
 export default class Todo {
   // Constructor
@@ -14,7 +14,8 @@ export default class Todo {
     this.title = title;
     this.description = description;
     console.log(dueDate);
-    this.dueDate = format(dueDate, "dd/MM/yyyy");
+    this.dueDate = format(parseISO(dueDate), "dd/MM/yyyy");
+    console.log(this.dueDate);
     this.priority = priority;
     this.isDone = isDone;
     this.code = `${projectName.toLowerCase()}-${title

@@ -50,14 +50,14 @@ export default (function App() {
     setCurrentProject(newProj.name);
   }
 
-  function createNewTodo(projectName) {
+  function createNewTodo(projectName, title, description, dueDate, priority) {
     // actual code to creat new todo will be implemented later
     let newTodo = Controller.addTodo(
       projectName,
-      `Test Todo ${testProjectCounter++}`,
-      "Test description",
-      new Date(),
-      "low"
+      title,
+      description,
+      dueDate,
+      priority
     );
     let project = projList.find((project) => project.name === projectName);
     project.todos.push(newTodo);
@@ -80,12 +80,12 @@ export default (function App() {
   function init() {
     // create a homepage project and intialize with some todos
     const home = Controller.addProject("Home", "default");
-    home.fillRandomTodos(5);
+    // home.fillRandomTodos(5);
     const today = Controller.addProject("Today", "default");
     const important = Controller.addProject("Important", "default");
-    important.fillRandomTodos(3);
+    // important.fillRandomTodos(3);
     const task = Controller.addProject("Task", "default");
-    task.fillRandomTodos(2);
+    // task.fillRandomTodos(2);
     projList.push(...[home, today, important, task]);
 
     // Load data from localStorage
