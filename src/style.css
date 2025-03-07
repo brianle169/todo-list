@@ -183,7 +183,6 @@ footer {
     display: flex;
     flex-direction: column;
     padding: 20px 0px;
-    /* row-gap: 15px; */
   }
 
   .project-name-container.default-section {
@@ -197,6 +196,12 @@ footer {
     overflow: auto;
     min-height: 20%;
     padding-top: 0px;
+  }
+
+  .project-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .project-item,
@@ -214,7 +219,7 @@ footer {
 
   .project-item.type-custom {
     font-size: clamp(0.9rem, 1.2vh, 1.1rem);
-    padding: 10px 0px 10px 20px;
+    padding: 10px 10px 10px 20px;
   }
 
   .project-item.type-default,
@@ -224,6 +229,29 @@ footer {
 
   .project-item.selected {
     background-color: #cee4d4;
+    border: 2px solid #83d8b4;
+  }
+
+  .project-item .delete {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border-radius: 0px;
+    border: none;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+  }
+
+  .project-item .delete svg {
+    display: block;
+    width: 25px;
+  }
+
+  .project-item .delete svg:hover {
+    fill: var(--priority-color-high);
   }
 
   .add-project,
@@ -267,7 +295,7 @@ footer {
 
   .project-item:hover {
     cursor: pointer;
-    border: 2px solid rgb(131, 216, 180);
+    background-color: #ffffff;
   }
 
   .todo-container {
@@ -287,6 +315,7 @@ footer {
     transition: transform 0.2s ease; /* Add this line for smooth transition */
   }
 
+  .project-item:hover,
   .todo:hover {
     -webkit-box-shadow: 6px 7px 9px -3px rgba(97, 93, 97, 1);
     -moz-box-shadow: 6px 7px 9px -3px rgba(97, 93, 97, 1);

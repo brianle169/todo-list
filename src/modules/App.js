@@ -86,7 +86,8 @@ export default (function App() {
     // important.fillRandomTodos(3);
     const task = Controller.addProject("Task", "default");
     // task.fillRandomTodos(2);
-    projList.push(...[home, today, important, task]);
+    const custom = Controller.addProject("Custom", "custom");
+    projList.push(...[home, today, important, task, custom]);
 
     // Load data from localStorage
     // let data = loadData();
