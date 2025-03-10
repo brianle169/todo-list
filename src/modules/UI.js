@@ -34,8 +34,7 @@ export default (function UI() {
       ...["project-name-container", "custom-section"]
     );
 
-    nav.appendChild(defaultSection);
-    nav.appendChild(customSection);
+    nav.append(defaultSection, customSection);
     return nav;
   }
 
@@ -46,73 +45,100 @@ export default (function UI() {
   }
 
   function createMainPanel() {
-    let mainPanel = document.createElement("div");
-    let banner = createBanner();
-    let nav = createNav();
-    let todoBody = createTodoBody();
-    let footer = createFooter();
+    let mainPanel = document.createElement("div"),
+      banner = createBanner(),
+      nav = createNav(),
+      todoBody = createTodoBody(),
+      footer = createFooter();
 
     mainPanel.classList.add("main");
-    mainPanel.appendChild(banner);
-    mainPanel.appendChild(nav);
-    mainPanel.appendChild(todoBody);
-    mainPanel.appendChild(footer);
+    mainPanel.append(banner, nav, todoBody, footer);
     return mainPanel;
   }
 
   function createTodoComponents(todo) {
     const todoItem = document.createElement("div");
     todoItem.classList.add(...["todo", `priority-${todo.priority}`]);
+    todoItem.id = todo.code;
 
+    // Todo left elements
     const progress = document.createElement("div");
     progress.classList.add("todo-info", "todo-progress");
     progress.innerHTML = `<input type="checkbox" name="progress" id="progress" />`;
     const progressInput = progress.querySelector(".todo-progress input");
     progressInput.addEventListener("change", () => {
       todo.checkDone();
-      console.log(todo.isDone);
       if (todo.isDone) {
         todoItem.classList.add("done");
       } else {
         todoItem.classList.remove("done");
       }
     });
-    todoItem.appendChild(progress);
-
     const title = document.createElement("div");
     title.classList.add("todo-info", "todo-title");
     title.textContent = todo.title;
-    todoItem.appendChild(title);
 
     const todoLeft = document.createElement("div");
     todoLeft.classList.add("todo-left-cont");
-    todoLeft.appendChild(progress);
-    todoLeft.appendChild(title);
-    todoItem.appendChild(todoLeft);
+    todoLeft.append(progress, title);
 
+    // Todo right elements
     const dueDate = document.createElement("div");
     dueDate.classList.add("todo-info", "todo-due-date");
     dueDate.textContent = todo.dueDate;
-    todoItem.appendChild(dueDate);
-
     const editButton = createEditButton("black");
-    todoItem.appendChild(editButton);
-
+    editButton.addEventListener("click", (event) => {
+      createTodoPopUp(
+        event,
+        "Edit Todo",
+        todo.title,
+        todo.description,
+        todo.priority,
+        confirmEditButtonHandler,
+        "Confirm",
+        todo.code
+      );
+    });
     const deleteButton = createDeleteButton();
-    todoItem.appendChild(deleteButton);
-
+    deleteButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      Controller.deleteTodo(App.getProject(todo.projectName), todo.title);
+      renderProject(App.getCurrentProject());
+    });
     const expandButton = createExpandButton();
-    todoItem.appendChild(expandButton);
+    expandButton.addEventListener("click", (event) => {});
 
     const todoRight = document.createElement("div");
     todoRight.classList.add("todo-right-cont");
-    todoRight.appendChild(dueDate);
-    todoRight.appendChild(editButton);
-    todoRight.appendChild(deleteButton);
-    todoRight.appendChild(expandButton);
-    todoItem.appendChild(todoRight);
+    todoRight.append(dueDate, editButton, deleteButton, expandButton);
+
+    // Append to todo items
+    todoItem.append(todoLeft, todoRight);
 
     return todoItem;
+  }
+
+  function confirmEditButtonHandler(event) {
+    event.preventDefault();
+    let tdTitle = event.target.title.value,
+      tdDesc = event.target.description.value,
+      tdPriority = event.target.priority.value,
+      tdDue = event.target.dueDate.value;
+    const code = event.target.id;
+
+    // Update the todo here
+    Controller.updateTodo(
+      App.getTodoByCode(code),
+      tdTitle,
+      tdDesc,
+      tdDue,
+      tdPriority
+    );
+
+    // Re-render the project
+    renderProject(App.getCurrentProject());
+    document.querySelector(".blur-overlay").remove();
+    document.querySelector(".add-todo-form-container").remove();
   }
 
   function createExpandButton() {
@@ -281,7 +307,9 @@ export default (function UI() {
     const addTodoButton = document.createElement("button");
     addTodoButton.classList.add(...["btn", "add-todo"]);
     addTodoButton.textContent = "Add Todo";
-    addTodoButton.addEventListener("click", createAddTodoPopUp);
+    addTodoButton.addEventListener("click", (event) => {
+      createTodoPopUp(event, ...[, , , ,], addTodoFormSubmitHandler);
+    });
     return addTodoButton;
   }
 
@@ -304,28 +332,35 @@ export default (function UI() {
     return addProjectForm;
   }
 
-  function createAddTodoPopUp() {
-    const blurOverlay = document.createElement("div");
-    const formCont = document.createElement("div");
-    const addTodoForm = document.createElement("form");
-    const formBanner = createBanner("New Todo");
-    const closeFormButton = document.createElement("button");
+  function createTodoPopUp(
+    event,
+    popupName,
+    title,
+    description,
+    priority,
+    handler,
+    submitButtonTitle,
+    todoCode
+  ) {
+    const blurOverlay = document.createElement("div"),
+      formCont = document.createElement("div"),
+      popupForm = document.createElement("form"),
+      formBanner = createBanner(popupName || "New Todo"),
+      closeFormButton = document.createElement("button");
+
+    blurOverlay.classList.add(...["blur-overlay", "active"]);
+    formCont.classList.add("add-todo-form-container");
+    popupForm.classList.add(...["add-todo-form", "active"]);
+    popupForm.id = todoCode || ""; // Todo's code for update form to use
 
     closeFormButton.textContent = "X";
     closeFormButton.classList.add("btn", "close-form");
     formBanner.appendChild(closeFormButton);
 
-    blurOverlay.classList.add(...["blur-overlay", "active"]);
-    formCont.classList.add("add-todo-form-container");
-    addTodoForm.classList.add("add-todo-form");
-    addTodoForm.classList.add("active");
+    formCont.append(formBanner, popupForm);
+    body.append(blurOverlay, formCont);
 
-    formCont.appendChild(formBanner);
-    formCont.appendChild(addTodoForm);
-    body.appendChild(blurOverlay);
-    body.appendChild(formCont);
-
-    addTodoForm.innerHTML = `<div class="entry title">
+    popupForm.innerHTML = `<div class="entry title">
         <input
           type="text"
           name="title"
@@ -333,6 +368,7 @@ export default (function UI() {
           placeholder="Title"
           autocomplete="off"
           autofocus="on"
+          value="${title || ""}"
           required
         />
       </div>
@@ -343,12 +379,19 @@ export default (function UI() {
           id="description"
           placeholder="Description..."
           autocomplete="off"
+          value="${description || ""}"
         />
       </div>
       <fieldset class="priority-options">
         <legend>Priority</legend>
         <div class="entry priority">
-          <input type="radio" name="priority" id="low" value="low" required />
+          <input 
+          type="radio" 
+          name="priority" 
+          id="low" 
+          value="low"             
+          ${priority === "low" ? "checked" : ""}
+          required />
           <label for="low">Low</label>
         </div>
         <div class="entry priority">
@@ -357,12 +400,19 @@ export default (function UI() {
             name="priority"
             id="medium"
             value="medium"
+          ${priority === "medium" ? "checked" : ""}
             required
           />
           <label for="medium">Medium</label>
         </div>
         <div class="entry priority">
-          <input type="radio" name="priority" id="high" value="high" required />
+          <input 
+          type="radio" 
+          name="priority" 
+          id="high" 
+          value="high" 
+          ${priority === "high" ? "checked" : ""}
+          required />
           <label for="high">High</label>
         </div>
       </fieldset>
@@ -370,32 +420,34 @@ export default (function UI() {
         <label for="dueDate">Due date</label>
         <input type="date" name="dueDate" id="dueDate" required />
       </div>
-      <button class="btn submit-todo" type="submit">Add</button>`;
+      <button class="btn submit-todo" type="submit">${
+        submitButtonTitle || "Add"
+      }</button>`;
 
-    addTodoForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const title = event.target.title.value;
-      const description = event.target.description.value;
-      const priority = event.target.priority.value;
-      const dueDate = event.target.dueDate.value;
-      console.log(dueDate);
-      console.log(new Date(dueDate + "T00:00:00"));
-      App.createNewTodo(
-        App.getCurrentProject(),
-        title,
-        description,
-        dueDate,
-        priority
-      );
-      renderProject(App.getCurrentProject());
-      blurOverlay.remove();
-      formCont.remove();
-    });
+    popupForm.addEventListener("submit", handler);
     closeFormButton.addEventListener("click", (event) => {
       event.preventDefault();
       blurOverlay.remove();
       formCont.remove();
     });
+  }
+
+  function addTodoFormSubmitHandler(event) {
+    event.preventDefault();
+    const title = event.target.title.value,
+      description = event.target.description.value,
+      priority = event.target.priority.value,
+      dueDate = event.target.dueDate.value;
+    App.createNewTodo(
+      App.getCurrentProject(),
+      title,
+      description,
+      dueDate,
+      priority
+    );
+    renderProject(App.getCurrentProject());
+    document.querySelector(".blur-overlay").remove();
+    document.querySelector(".add-todo-form-container").remove();
   }
 
   // Task: create a form that pops up to fill in for Project information. Create a project on submission.
@@ -444,7 +496,7 @@ export default (function UI() {
     todoBody.innerHTML = "";
 
     // get the correct project object
-    const todos = App.getProject(projectName);
+    const todos = App.getTodosByProjectName(projectName);
     for (let todo of todos) {
       let todoItem = createTodoComponents(todo);
       todoBody.appendChild(todoItem);
@@ -453,10 +505,11 @@ export default (function UI() {
   }
 
   function renderNavContent(projectList) {
-    const navBar = document.querySelector(".nav-bar");
-    const defaultSection = document.querySelector(".default-section");
+    const navBar = document.querySelector(".nav-bar"),
+      defaultSection = document.querySelector(".default-section"),
+      customSection = document.querySelector(".custom-section");
+
     defaultSection.innerHTML = "";
-    const customSection = document.querySelector(".custom-section");
     customSection.innerHTML = "";
     if (document.querySelector(".add-project")) {
       document.querySelector(".add-project").remove();

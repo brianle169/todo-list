@@ -31,7 +31,6 @@ export default (function App() {
 
   // *** Try to reformat using JavaScript's array methods
   function getTodayTodos() {
-    let today = format(new Date(), "dd/MM/yyyy");
     let todayTodos = [];
     for (let project of projList) {
       for (let todo of project.todos) {
@@ -69,6 +68,10 @@ export default (function App() {
   }
 
   function getProject(projectName) {
+    return projList.find((project) => project.name === projectName);
+  }
+
+  function getTodosByProjectName(projectName) {
     if (projectName === "Home") {
       return getAllTodos();
     } else if (projectName === "Today") {
@@ -76,6 +79,11 @@ export default (function App() {
     } else {
       return projList.find((project) => project.name === projectName).todos;
     }
+  }
+
+  function getTodoByCode(code) {
+    let allTodos = getAllTodos();
+    return allTodos.find((todo) => todo.code === code);
   }
 
   function init() {
@@ -118,9 +126,11 @@ export default (function App() {
     createNewTodo,
     getData,
     getProject,
+    getTodosByProjectName,
     setCurrentProject,
     getCurrentProject,
     getAllTodos,
     getTodayTodos,
+    getTodoByCode,
   };
 })();

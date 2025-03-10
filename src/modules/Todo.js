@@ -13,9 +13,7 @@ export default class Todo {
     this.projectName = projectName;
     this.title = title;
     this.description = description;
-    console.log(dueDate);
     this.dueDate = format(parseISO(dueDate), "PP");
-    console.log(this.dueDate);
     this.priority = priority;
     this.isDone = isDone;
     this.code = `${projectName.toLowerCase()}-${title
@@ -33,7 +31,7 @@ export default class Todo {
     this.title = title || this.title;
     this.description = description || this.description;
     if (dueDate) {
-      this.dueDate = format(dueDate, "dd-MMM-yyyy");
+      this.dueDate = format(parseISO(dueDate), "PP");
     }
     this.priority = priority || this.priority;
   }
@@ -47,7 +45,7 @@ export default class Todo {
   }
 
   isToday() {
-    let today = format(new Date(), "dd/MM/yyyy");
+    let today = format(new Date(), "PP");
     return this.dueDate === today;
   }
 }

@@ -17,13 +17,13 @@ export const Controller = (function () {
     return new Todo(projectName, title, description, dueDate, priority, false);
   }
 
-  function deleteTodo(project, projectName = "Home", title) {
-    let target = `${projectName.toLowerCase()}-${title
+  function deleteTodo(project, title) {
+    let target = `${project.name.toLowerCase()}-${title
       .toLowerCase()
       .replaceAll(" ", "_")}`;
-    for (let i = 0; i < project.length; i++) {
-      if (project[i].code === target) {
-        project.splice(i, 1);
+    for (let i = 0; i < project.todos.length; i++) {
+      if (project.todos[i].code === target) {
+        project.todos.splice(i, 1);
         break;
       }
     }
@@ -60,10 +60,6 @@ export const Controller = (function () {
     todo.update(title, description, dueDate, priority);
   }
 
-  function todoDone(todo) {
-    todo.checkDone();
-  }
-
   return {
     addTodo,
     deleteTodo,
@@ -73,6 +69,5 @@ export const Controller = (function () {
     displayAllProject,
     updateProjectTitle,
     updateTodo,
-    todoDone,
   };
 })();
