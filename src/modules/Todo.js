@@ -22,9 +22,11 @@ export default class Todo {
   }
 
   get info() {
-    return `${this.priority} - ${this.projectName} - ${this.title} (Due: ${
-      this.dueDate
-    }): ${this.description} // ${this.isDone ? "Done" : "In Progress"}`;
+    return `Project: ${this.projectName}\r
+            Detailed description: ${this.description}\r
+            Priority: ${this.priority}\r
+            Progress: ${this.isDone ? "Finished" : "In Progress"}\r
+            `;
   }
 
   update(title, description, dueDate, priority) {

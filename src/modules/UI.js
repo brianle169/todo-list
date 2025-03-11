@@ -105,14 +105,12 @@ export default (function UI() {
       Controller.deleteTodo(App.getProject(todo.projectName), todo.title);
       renderProject(App.getCurrentProject());
     });
-    const expandButton = createExpandButton();
-    expandButton.addEventListener("click", (event) => {});
+    const expandButton = createExpandButton(todo);
 
     const todoRight = document.createElement("div");
     todoRight.classList.add("todo-right-cont");
     todoRight.append(dueDate, editButton, deleteButton, expandButton);
 
-    // Append to todo items
     todoItem.append(todoLeft, todoRight);
 
     return todoItem;
@@ -141,7 +139,33 @@ export default (function UI() {
     document.querySelector(".add-todo-form-container").remove();
   }
 
-  function createExpandButton() {
+  function createExpandedContainer(todo) {
+    const expandedCont = document.createElement("div");
+    expandedCont.classList.add("todo-expanded-cont");
+    expandedCont.innerHTML = `    <div class="todo-detail">
+      <p class="label">Project:</p>
+      <p class="detail-content">${todo.projectName}</p>
+    </div>
+    <div class="todo-detail">
+      <p class="label">Description:</p>
+      <p class="detail-content">${todo.description}</p>
+    </div>
+    <div class="todo-detail">
+      <p class="label">Priority:</p>
+      <p class="detail-content">${todo.priority.replace(
+        /^./,
+        todo.priority[0].toUpperCase()
+      )}</p>
+    </div>
+    <div class="todo-detail">
+      <p class="label">Progress:</p>
+      <p class="detail-content">${todo.isDone ? "Finished" : "In Progress"}</p>
+    </div>
+    `;
+    return expandedCont;
+  }
+
+  function createExpandButton(todo) {
     const expandButton = document.createElement("button");
     expandButton.classList.add("btn", "expand");
     expandButton.innerHTML = `    <svg
@@ -160,10 +184,15 @@ export default (function UI() {
         <path d="M18 9L12 15L6 9" stroke="#000000" stroke-width="2"></path>
       </g>
     </svg>`;
+    expandButton.addEventListener("click", () => {
+      const todoItem = document.getElementById(`${todo.code}`);
+      todoItem.append(createExpandedContainer(todo));
+      expandButton.replaceWith(createShrinkButton(todo));
+    });
     return expandButton;
   }
 
-  function createShrinkButton() {
+  function createShrinkButton(todo) {
     const shrinkButton = document.createElement("button");
     shrinkButton.classList.add("btn", "shrink");
     shrinkButton.innerHTML = `    <svg
@@ -183,6 +212,10 @@ export default (function UI() {
         <path d="M18 9L12 15L6 9" stroke="#3d66e1" stroke-width="2"></path>
       </g>
     </svg>`;
+    shrinkButton.addEventListener("click", () => {
+      shrinkButton.replaceWith(createExpandButton(todo));
+      document.querySelector(`#${todo.code} .todo-expanded-cont`).remove();
+    });
     return shrinkButton;
   }
 

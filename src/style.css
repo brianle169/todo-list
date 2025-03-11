@@ -320,12 +320,15 @@ footer {
 
   .todo {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     height: max-content;
     background-color: #edebeb;
     padding: 15px;
     transform: translateY(0px); /* Add this line */
     transition: transform 0.2s ease; /* Add this line for smooth transition */
+    border-radius: 5px;
+    row-gap: 15px;
   }
 
   .todo .todo-progress {
@@ -341,6 +344,19 @@ footer {
   .todo > * {
     display: flex;
     align-items: center;
+  }
+
+  .todo-title,
+  .todo-detail .label {
+    font-weight: 600;
+  }
+
+  .todo-detail {
+    display: flex;
+  }
+
+  .todo-detail .label {
+    width: 12%;
   }
 
   .todo.done .todo-title,
@@ -371,6 +387,13 @@ footer {
 
   .todo-right-cont {
     gap: 30px;
+  }
+
+  .todo-expanded-cont {
+    display: block;
+    width: 100%;
+    padding-top: 10px;
+    border-top: 2px solid lightgrey;
   }
 
   .project-item:hover,
