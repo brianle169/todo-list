@@ -3,8 +3,8 @@ import Project from "./Project.js";
 // Controller module: This factory function will return the functionalities of a Controller, which will help control the state of a todo list app.
 // It will create projects, todos, update projects & todos, and delete them.
 export const Controller = (function () {
-  function addProject(name, type) {
-    return new Project(name, type, []);
+  function addProject(name, type, todos) {
+    return new Project(name, type, todos || []);
   }
 
   function addTodo(

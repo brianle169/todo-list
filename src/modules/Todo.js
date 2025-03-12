@@ -13,20 +13,15 @@ export default class Todo {
     this.projectName = projectName;
     this.title = title;
     this.description = description;
-    this.dueDate = format(parseISO(dueDate), "PP");
+    this.dueDate = format(dueDate, "PP");
     this.priority = priority;
     this.isDone = isDone;
-    this.code = `${projectName.toLowerCase()}-${title
-      .toLowerCase()
-      .replaceAll(" ", "_")}`;
   }
 
-  get info() {
-    return `Project: ${this.projectName}\r
-            Detailed description: ${this.description}\r
-            Priority: ${this.priority}\r
-            Progress: ${this.isDone ? "Finished" : "In Progress"}\r
-            `;
+  get code() {
+    return `${this.projectName.toLowerCase()}-${this.title
+      .toLowerCase()
+      .replaceAll(" ", "_")}`;
   }
 
   update(title, description, dueDate, priority) {
@@ -40,10 +35,6 @@ export default class Todo {
 
   checkDone() {
     this.isDone = !this.isDone;
-  }
-
-  logInfo() {
-    console.log(this.info);
   }
 
   isToday() {

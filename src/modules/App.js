@@ -1,16 +1,60 @@
-import Project from "./Project.js";
-import Todo from "./Todo.js";
 import { Controller } from "./Controller.js";
 import UI from "./UI.js";
-import { format } from "date-fns";
+import Project from "./Project.js";
+import Todo from "./Todo.js";
 
 // App module: this module will be the center of all modules. It will use the functionalities of all other logic modules,
 // combine those and control the state of the app. It will also store the variables, arrays, todos, etc.
 
 export default (function App() {
   let currentProject = "Home";
-  let testProjectCounter = 1;
   const projList = [];
+
+  // Function taken from MDN Web docs on localStorage
+  function storageAvailable(type) {
+    let storage;
+    try {
+      storage = window[type];
+      const x = "__storage_test__";
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      return (
+        e instanceof DOMException &&
+        e.name === "QuotaExceededError" &&
+        storage &&
+        storage.length !== 0
+      );
+    }
+  }
+
+  function loadData() {
+    if (storageAvailable("localStorage")) {
+      // What we want is a list of project objects, within there will be a list of todo objects
+      const storage = window.localStorage;
+
+      // The array of projects
+      for (let i = 0; i < storage.length; i++) {
+        const project = JSON.parse(storage.getItem(storage.key(i)));
+        const projObj = new Project(project.name, project.type, project.todos);
+        for (let j = 0; j < projObj.todos.length; j++) {
+          const currTodo = projObj.todos[j];
+          projObj.todos[j] = new Todo(
+            currTodo.projectName,
+            currTodo.title,
+            currTodo.description,
+            new Date(currTodo.dueDate),
+            currTodo.priority,
+            currTodo.isDone
+          );
+        }
+        projList.push(projObj);
+      }
+    } else {
+      initializeData();
+    }
+  }
 
   function setCurrentProject(projectName) {
     currentProject = projectName;
@@ -59,7 +103,6 @@ export default (function App() {
       priority
     );
     let project = projList.find((project) => project.name === projectName);
-    console.log(projList);
     project.todos.push(newTodo);
   }
 
@@ -86,30 +129,25 @@ export default (function App() {
     return allTodos.find((todo) => todo.code === code);
   }
 
-  function init() {
-    // create a homepage project and intialize with some todos
+  function initializeData() {
     const home = Controller.addProject("Home", "default");
-
     const today = Controller.addProject("Today", "default");
     const important = Controller.addProject("Important", "default");
-    // important.fillRandomTodos(3);
     const task = Controller.addProject("Task", "default");
-    // task.fillRandomTodos(2);
     const custom = Controller.addProject("Custom", "custom");
     projList.push(...[home, today, important, task, custom]);
     createNewTodo(
       "Home",
       "Welcome to Todo App",
       "This is a default project",
-      "2021-12-31",
+      new Date(),
       "high"
     );
-    // Load data from localStorage
-    // let data = loadData();
+  }
 
-    // process the data to start rendering page
-    // let projectNames = getProjectNames(data); // this is used for navigation bar
-    // let allTodos = getAllTodos(data);
+  function init() {
+    // create a homepage project and intialize with some todos
+    loadData();
 
     // Render main panel
     UI.renderMainPanel();
