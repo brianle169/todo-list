@@ -2,6 +2,7 @@ import { Controller } from "./Controller.js";
 import UI from "./UI.js";
 import Project from "./Project.js";
 import Todo from "./Todo.js";
+import { format, parseISO } from "date-fns";
 
 // App module: this module will be the center of all modules. It will use the functionalities of all other logic modules,
 // combine those and control the state of the app. It will also store the variables, arrays, todos, etc.
@@ -31,8 +32,12 @@ export default (function App() {
 
   function loadData() {
     if (storageAvailable("localStorage")) {
+      if (window.localStorage.length === 0) {
+        initializeData();
+      }
       // What we want is a list of project objects, within there will be a list of todo objects
       const storage = window.localStorage;
+      console.log(storage);
 
       // The array of projects
       for (let i = 0; i < storage.length; i++) {
@@ -52,7 +57,7 @@ export default (function App() {
         projList.push(projObj);
       }
     } else {
-      initializeData();
+      console.warn("window.localStorage is not available. Please check again!");
     }
   }
 
@@ -75,15 +80,13 @@ export default (function App() {
 
   // *** Try to reformat using JavaScript's array methods
   function getTodayTodos() {
-    let todayTodos = [];
-    for (let project of projList) {
-      for (let todo of project.todos) {
-        if (todo.isToday()) {
-          todayTodos.push(todo);
-        }
-      }
-    }
-    return todayTodos;
+    return getAllTodos().filter(
+      (todo) => todo.dueDate === format(new Date(), "PP")
+    );
+  }
+
+  function getTodoByImportance() {
+    return getAllTodos().filter((todo) => todo.priority === "high");
   }
 
   function createNewProject(projectName) {
@@ -91,6 +94,7 @@ export default (function App() {
     let newProj = Controller.addProject(projectName, "custom");
     projList.push(newProj);
     setCurrentProject(newProj.name);
+    window.localStorage.setItem(projectName, JSON.stringify(newProj));
   }
 
   function createNewTodo(projectName, title, description, dueDate, priority) {
@@ -104,6 +108,10 @@ export default (function App() {
     );
     let project = projList.find((project) => project.name === projectName);
     project.todos.push(newTodo);
+    window.localStorage.setItem(
+      projectName,
+      JSON.stringify(getProject(projectName))
+    );
   }
 
   function getData() {
@@ -119,6 +127,8 @@ export default (function App() {
       return getAllTodos();
     } else if (projectName === "Today") {
       return getTodayTodos();
+    } else if (projectName === "Important") {
+      return getTodoByImportance();
     } else {
       return projList.find((project) => project.name === projectName).todos;
     }
@@ -134,15 +144,21 @@ export default (function App() {
     const today = Controller.addProject("Today", "default");
     const important = Controller.addProject("Important", "default");
     const task = Controller.addProject("Task", "default");
-    const custom = Controller.addProject("Custom", "custom");
-    projList.push(...[home, today, important, task, custom]);
+    projList.push(...[home, today, important, task]);
     createNewTodo(
       "Home",
-      "Welcome to Todo App",
-      "This is a default project",
+      "Welcome to To-Dojo",
+      "Use this todo app to boost your productivity by 1000%",
       new Date(),
       "high"
     );
+    pushToLocalStorage(projList);
+  }
+
+  function pushToLocalStorage(list) {
+    for (let project of list) {
+      window.localStorage.setItem(project.name, JSON.stringify(project));
+    }
   }
 
   function init() {

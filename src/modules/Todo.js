@@ -19,7 +19,7 @@ export default class Todo {
   }
 
   get code() {
-    return `${this.projectName.toLowerCase()}-${this.title
+    return `${this.projectName.toLowerCase().replaceAll(" ", "_")}-${this.title
       .toLowerCase()
       .replaceAll(" ", "_")}`;
   }

@@ -151,11 +151,11 @@ footer {
     padding: 20px 40px;
     background-color: rgb(131, 216, 180);
     color: #ffffff;
-  }
 
-  .banner p {
-    font-size: clamp(2rem, 3vh, 3rem);
-    font-weight: 800;
+    p {
+      font-size: clamp(2rem, 3vh, 3rem);
+      font-weight: 800;
+    }
   }
 
   footer {
@@ -233,6 +233,22 @@ footer {
     border: 2px solid #83d8b4;
   }
 
+  .project-item#Home {
+    order: 1;
+  }
+
+  .project-item#Today {
+    order: 2;
+  }
+
+  .project-item#Important {
+    order: 3;
+  }
+
+  .project-item#Task {
+    order: 4;
+  }
+
   .edit,
   .delete,
   .expand,
@@ -247,14 +263,11 @@ footer {
     padding: 0;
     width: 23px;
     height: 23px;
-  }
 
-  .edit svg,
-  .delete svg,
-  .expand svg,
-  .shrink svg {
-    display: block;
-    width: 23px;
+    svg {
+      display: block;
+      width: 23px;
+    }
   }
 
   .delete svg:hover,
@@ -329,16 +342,16 @@ footer {
     transition: transform 0.2s ease; /* Add this line for smooth transition */
     border-radius: 5px;
     row-gap: 15px;
-  }
 
-  .todo .todo-progress {
-    display: flex;
-    align-items: center;
-  }
+    .todo-progress {
+      display: flex;
+      align-items: center;
+    }
 
-  .todo input[type="checkbox"] {
-    width: 23px;
-    height: 23px;
+    input[type="checkbox"] {
+      width: 23px;
+      height: 23px;
+    }
   }
 
   .todo > * {
@@ -353,32 +366,38 @@ footer {
 
   .todo-detail {
     display: flex;
+
+    .label {
+      width: 12%;
+    }
   }
 
-  .todo-detail .label {
-    width: 12%;
-  }
+  .todo.done {
+    .todo-detail > * {
+      color: var(--status-done-foreground);
+    }
 
-  .todo.done .todo-title,
-  .todo.done .todo-description,
-  .todo.done .todo-due-date {
-    text-decoration: line-through;
-    color: var(--status-done-foreground);
-  }
+    .delete svg {
+      fill: var(--status-done-foreground);
+    }
 
-  .todo.done .delete svg {
-    fill: var(--status-done-foreground);
-  }
+    .todo-title,
+    .todo-description,
+    .todo-due-date {
+      text-decoration: line-through;
+      color: var(--status-done-foreground);
+    }
 
-  .todo.done .edit {
-    cursor: not-allowed;
-    user-select: none;
-  }
+    .edit {
+      cursor: not-allowed;
+      user-select: none;
+    }
 
-  .todo.done .edit svg path,
-  .todo.done .expand svg path,
-  .todo.done .shrink svg path {
-    stroke: var(--status-done-foreground);
+    .edit svg path,
+    .expand svg path,
+    .shrink svg path {
+      stroke: var(--status-done-foreground);
+    }
   }
 
   .todo-left-cont {
@@ -427,6 +446,12 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    .btn-cont {
+      display: flex;
+      justify-content: space-between;
+      column-gap: 10px;
+    }
   }
 
   .add-project-form input {
@@ -444,12 +469,6 @@ footer {
     font-style: italic;
   }
 
-  .add-project-form .btn-cont {
-    display: flex;
-    justify-content: space-between;
-    column-gap: 10px;
-  }
-
   .btn-cont .btn {
     flex: 1;
   }
@@ -458,28 +477,27 @@ footer {
     position: absolute;
     border: 2px solid grey;
     border-radius: 5px;
-  }
 
-  .add-todo-form-container .banner {
-    border-radius: 5px 5px 0px 0px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .banner {
+      border-radius: 5px 5px 0px 0px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .banner button {
+      background-color: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 1.8rem;
+      font-weight: 800;
+      padding: 5px;
+      margin-right: 5px;
+    }
 
-  .add-todo-form-container .banner button {
-    background-color: transparent;
-    border: none;
-    color: #ffffff;
-    font-size: 1.8rem;
-    font-weight: 800;
-    padding: 5px;
-    margin-right: 5px;
-  }
-
-  .add-todo-form-container .banner button:hover {
-    cursor: pointer;
-    text-decoration: underline;
+    .banner button:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 
   .add-todo-form {

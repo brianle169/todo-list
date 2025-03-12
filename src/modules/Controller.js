@@ -1,5 +1,6 @@
 import Todo from "./Todo.js";
 import Project from "./Project.js";
+import App from "./App.js";
 // Controller module: This factory function will return the functionalities of a Controller, which will help control the state of a todo list app.
 // It will create projects, todos, update projects & todos, and delete them.
 export const Controller = (function () {
@@ -18,7 +19,7 @@ export const Controller = (function () {
   }
 
   function deleteTodo(project, title) {
-    let target = `${project.name.toLowerCase()}-${title
+    let target = `${project.name.toLowerCase().replaceAll(" ", "_")}-${title
       .toLowerCase()
       .replaceAll(" ", "_")}`;
     for (let i = 0; i < project.todos.length; i++) {
@@ -27,6 +28,7 @@ export const Controller = (function () {
         break;
       }
     }
+    window.localStorage.setItem(project.name, JSON.stringify(project));
   }
 
   function deleteProject(projectList, projectName) {
@@ -36,6 +38,7 @@ export const Controller = (function () {
         break;
       }
     }
+    window.localStorage.removeItem(projectName);
   }
 
   function displayAllTodos(projectList) {
@@ -52,12 +55,26 @@ export const Controller = (function () {
     }
   }
 
-  function updateProjectTitle(project, title) {
-    project.title = title;
+  function updateProjectTitle(project, name) {
+    const oldName = project.name;
+    project.name = name;
+    window.localStorage.setItem(oldName, JSON.stringify(project));
   }
 
   function updateTodo(todo, title, description, dueDate, priority) {
     todo.update(title, description, dueDate, priority);
+    window.localStorage.setItem(
+      todo.projectName,
+      JSON.stringify(App.getProject(todo.projectName))
+    );
+  }
+
+  function updateTodoProgress(todo) {
+    todo.checkDone();
+    window.localStorage.setItem(
+      todo.projectName,
+      JSON.stringify(App.getProject(todo.projectName))
+    );
   }
 
   return {
@@ -69,5 +86,6 @@ export const Controller = (function () {
     displayAllProject,
     updateProjectTitle,
     updateTodo,
+    updateTodoProgress,
   };
 })();

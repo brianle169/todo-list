@@ -67,11 +67,11 @@ export default (function UI() {
     progress.innerHTML = `<input type="checkbox" name="progress" id="progress" />`;
     const progressInput = progress.querySelector(".todo-progress input");
     progressInput.addEventListener("change", () => {
-      todo.checkDone();
-      if (todo.isDone) {
-        todoItem.classList.add("done");
-      } else {
-        todoItem.classList.remove("done");
+      Controller.updateTodoProgress(todo);
+      todoItem.classList.toggle("done");
+      const progressDetail = document.getElementById(`${todo.code}-progress`);
+      if (progressDetail) {
+        progressDetail.textContent = todo.isDone ? "Finished" : "In Progress";
       }
     });
     const title = document.createElement("div");
@@ -111,6 +111,15 @@ export default (function UI() {
     todoRight.classList.add("todo-right-cont");
     todoRight.append(dueDate, editButton, deleteButton, expandButton);
 
+    // Render todo progress state
+    if (todo.isDone) {
+      todoItem.classList.add("done");
+      progressInput.checked = true;
+    } else {
+      todoItem.classList.remove("done");
+      progressInput.checked = false;
+    }
+
     todoItem.append(todoLeft, todoRight);
 
     return todoItem;
@@ -144,22 +153,24 @@ export default (function UI() {
     expandedCont.classList.add("todo-expanded-cont");
     expandedCont.innerHTML = `    <div class="todo-detail">
       <p class="label">Project:</p>
-      <p class="detail-content">${todo.projectName}</p>
+      <p class="detail-content project-name">${todo.projectName}</p>
     </div>
     <div class="todo-detail">
       <p class="label">Description:</p>
-      <p class="detail-content">${todo.description}</p>
+      <p class="detail-content description">${todo.description}</p>
     </div>
     <div class="todo-detail">
       <p class="label">Priority:</p>
-      <p class="detail-content">${todo.priority.replace(
+      <p class="detail-content priority">${todo.priority.replace(
         /^./,
         todo.priority[0].toUpperCase()
       )}</p>
     </div>
     <div class="todo-detail">
       <p class="label">Progress:</p>
-      <p class="detail-content">${todo.isDone ? "Finished" : "In Progress"}</p>
+      <p id="${todo.code}-progress" class="detail-content progress">${
+      todo.isDone ? "Finished" : "In Progress"
+    }</p>
     </div>
     `;
     return expandedCont;
