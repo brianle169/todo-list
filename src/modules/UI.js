@@ -465,7 +465,7 @@ export default (function UI() {
       <div class="entry due-date">
         <label for="dueDate">Due date</label>
         <input type="date" name="dueDate" id="dueDate" min="${new Date()}" value="${
-      format(new Date(dueDate), "yyyy-MM-dd") || ""
+      dueDate ? format(new Date(dueDate), "yyyy-MM-dd") : ""
     }" required />
       </div>
       <button class="btn submit-todo" type="submit">${
