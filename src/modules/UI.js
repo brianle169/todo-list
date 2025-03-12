@@ -94,6 +94,7 @@ export default (function UI() {
         todo.title,
         todo.description,
         todo.priority,
+        todo.dueDate,
         confirmEditButtonHandler,
         "Confirm",
         todo.code
@@ -157,7 +158,7 @@ export default (function UI() {
     </div>
     <div class="todo-detail">
       <p class="label">Description:</p>
-      <p class="detail-content description">${todo.description}</p>
+      <p class="detail-content description">${todo.description || "-"}</p>
     </div>
     <div class="todo-detail">
       <p class="label">Priority:</p>
@@ -352,7 +353,7 @@ export default (function UI() {
     addTodoButton.classList.add(...["btn", "add-todo"]);
     addTodoButton.textContent = "Add Todo";
     addTodoButton.addEventListener("click", (event) => {
-      createTodoPopUp(event, ...[, , , ,], addTodoFormSubmitHandler);
+      createTodoPopUp(event, ...[, , , , ,], addTodoFormSubmitHandler);
     });
     return addTodoButton;
   }
@@ -382,6 +383,7 @@ export default (function UI() {
     title,
     description,
     priority,
+    dueDate,
     handler,
     submitButtonTitle,
     todoCode
@@ -462,7 +464,9 @@ export default (function UI() {
       </fieldset>
       <div class="entry due-date">
         <label for="dueDate">Due date</label>
-        <input type="date" name="dueDate" id="dueDate" required />
+        <input type="date" name="dueDate" id="dueDate" min="${new Date()}" value="${
+      format(new Date(dueDate), "yyyy-MM-dd") || ""
+    }" required />
       </div>
       <button class="btn submit-todo" type="submit">${
         submitButtonTitle || "Add"
