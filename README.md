@@ -19,3 +19,19 @@ The objective of To-Dojo is to allow me to practice the following skills/technol
 - Using `localStorage` to keep data records locally and display on app load (new skill)
 - Developing also for mobile/small-screen layout
 - Problem solving, JS array methods, etc.
+
+# Try it out!
+
+You can try this project out using [this link](https://brianle169.github.io/todo-list/). Another way is to do the following:
+
+- Fork and clone this repository locally on your machines
+- Run `npm install` to install the dependencies needed
+- Run `npm run build` to build the project
+- Run `npm run dev` or simply use any tool to render the project on a browser
+- Have fun! (I definitely did while building this app)
+
+# Feedback and contact
+
+Please do not hesitate to contact me or leave a feedback on how I did. I know my code is not good, that's the whole point of learning anyway!
+
+You can contact me through [LinkedIn](https://www.linkedin.com/in/cminhle/) for anything including feedbacks, chatting, job offers (please do!), etc.
