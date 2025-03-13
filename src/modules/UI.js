@@ -5,13 +5,17 @@ import { add, format } from "date-fns";
 export default (function UI() {
   const body = document.querySelector("body");
 
-  function createBanner(text) {
+  function createBanner(text, createMenu) {
     // create banner with logo
     const banner = document.createElement("div");
     const bannerText = document.createElement("p");
     bannerText.textContent = text || "To-Dojo";
     banner.classList.add("banner");
-    banner.appendChild(bannerText); // Ensure bannerText is appended to banner
+    banner.append(bannerText);
+    if (createMenu) {
+      const menuButton = createMenuButton();
+      banner.append(menuButton);
+    }
     return banner;
   }
 
@@ -46,7 +50,7 @@ export default (function UI() {
 
   function createMainPanel() {
     let mainPanel = document.createElement("div"),
-      banner = createBanner(),
+      banner = createBanner(undefined, true),
       nav = createNav(),
       todoBody = createTodoBody(),
       footer = createFooter();
@@ -152,13 +156,14 @@ export default (function UI() {
   function createExpandedContainer(todo) {
     const expandedCont = document.createElement("div");
     expandedCont.classList.add("todo-expanded-cont");
-    expandedCont.innerHTML = `    <div class="todo-detail">
+    expandedCont.innerHTML = `
+        <div class="todo-detail">
       <p class="label">Project:</p>
       <p class="detail-content project-name">${todo.projectName}</p>
     </div>
     <div class="todo-detail">
       <p class="label">Description:</p>
-      <p class="detail-content description">${todo.description || "-"}</p>
+      <p class="detail-content">${todo.description || "-"}</p>
     </div>
     <div class="todo-detail">
       <p class="label">Priority:</p>
@@ -305,6 +310,37 @@ export default (function UI() {
     return deleteButton;
   }
 
+  function createMenuButton() {
+    const menuButton = document.createElement("button");
+    menuButton.classList.add("btn", "menu");
+    menuButton.innerHTML = `
+    <svg
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="#ffffff"
+    >
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g
+        id="SVGRepo_tracerCarrier"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          fill="#ffffff"
+          fill-rule="evenodd"
+          d="M18 5a1 1 0 100-2H2a1 1 0 000 2h16zm-4 4a1 1 0 100-2H6a1 1 0 100 2h8zm5 3a1 1 0 01-1 1H2a1 1 0 110-2h16a1 1 0 011 1zm-5 5a1 1 0 100-2H6a1 1 0 100 2h8z"
+        ></path>
+      </g>
+    </svg>
+`;
+    menuButton.addEventListener("click", (event) => {
+      document.querySelector(".nav-bar").classList.toggle("active");
+    });
+    return menuButton;
+  }
+
   function createProjectComponents(project) {
     const projItem = document.createElement("div");
     projItem.classList.add(...["project-item", `type-${project.type}`]);
@@ -320,14 +356,6 @@ export default (function UI() {
     if (project.type === "custom") {
       let deleteButton = createDeleteButton("#83d8b4");
       projItem.appendChild(deleteButton);
-      deleteButton.style.opacity = 0;
-
-      projItem.addEventListener("mouseover", () => {
-        deleteButton.style.opacity = 1;
-      });
-      projItem.addEventListener("mouseleave", () => {
-        deleteButton.style.opacity = 0;
-      });
 
       deleteButton.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -573,6 +601,7 @@ export default (function UI() {
     for (let project of projectList) {
       let projectItem = createProjectComponents(project);
       projectItem.addEventListener("click", (event) => {
+        document.querySelector(".nav-bar").classList.toggle("active");
         renderProject(event.currentTarget.id);
       });
       if (project.type === "default") {
@@ -581,6 +610,8 @@ export default (function UI() {
         customSection.appendChild(projectItem);
       }
     }
+
+    // Hide and show project delete button based on screen width
 
     // Add the add project button to the navBar
     navBar.appendChild(createAddProjectButton());
